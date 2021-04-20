@@ -36,17 +36,17 @@ int main(int argc, char** argv)
 	json::JSONParser settings(readJSON());
 	const unique_ptr<json::utility::jsonParserStruct>& root = settings.get<unique_ptr<json::utility::jsonParserStruct>>(jsonRootName);
 
-	if (it != buildConfigurations.end() && get<bool>(root->data.at(*it)))
+	if (it == buildConfigurations.end())
+	{
+		cout << "Can't find this build configuration " << argv[1] << endl;
+	}
+	else if (get<bool>(root->data.at(*it)))
 	{
 		ostringstream command;
 
 		command << "(TYPE Doxyfile & ECHO PROJECT_NUMBER=" << argv[2] << ") | doxygen.exe -";
 
 		system(command.str().data());
-	}
-	else
-	{
-		cout << "Can't find this build configuration " << argv[1] << endl;
 	}
 
 #ifdef NDEBUG
